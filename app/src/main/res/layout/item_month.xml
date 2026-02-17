@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginBottom="8dp"
+    android:background="#FFFFFF"
+    android:elevation="2dp">
+
+    <LinearLayout
+        android:id="@+id/month_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:background="?attr/selectableItemBackground">
+
+        <TextView
+            android:id="@+id/month_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#1A237E" />
+
+        <ImageView
+            android:id="@+id/expand_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/arrow_down_float"
+            android:contentDescription="Expand" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/calendar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:visibility="gone">
+
+        <!-- Day of week headers -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Min"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#D32F2F"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Sen"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Sel"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Rab"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Kam"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Jum"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Sab"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/calendar_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            android:nestedScrollingEnabled="false" />
+
+    </LinearLayout>
+
+</LinearLayout>
