@@ -42,7 +42,7 @@ object AboutDialog {
         val view     = inflater.inflate(R.layout.dialog_about, null)
 
         // ── Isi nama & versi ──────────────────────────────────────
-        view.findViewById<TextView>(R.id.tv_app_name).text    = "Kalender Indonesia"
+        view.findViewById<TextView>(R.id.tv_app_name).text    = "Kalender Nusantara"
         view.findViewById<TextView>(R.id.tv_app_version).text = "Versi $versionName"
 
         // ── Link Website ──────────────────────────────────────────

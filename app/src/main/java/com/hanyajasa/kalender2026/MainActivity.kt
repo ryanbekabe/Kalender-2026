@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = "Kalender Indonesia"
+        supportActionBar?.title = "Kalender Nusantara"
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -374,7 +374,7 @@ class MainActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("Perbarui Data Hari Libur")
             .setMessage(
-                "Mengunduh ulang data hari libur $activeYear dari GitHub.\n\n" +
+                "Mengunduh ulang data hari libur $activeYear dari GitHub https://raw.githubusercontent.com/ryanbekabe/Kalender-2026/main/app/src/main/assets/holidays_$activeYear.csv.\n\n" +
                 "Kalender akan diperbarui otomatis setelah unduhan selesai."
             )
             .setPositiveButton("Perbarui") { _, _ ->

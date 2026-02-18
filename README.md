@@ -1,102 +1,110 @@
-# Kalender Indonesia - Android
+# Kalender Nusantara - Android
 
-Aplikasi kalender Gregorian **multi-tahun** untuk pengguna Indonesia, menampilkan hari libur nasional dengan warna merah beserta keterangannya. Tidak perlu rilis APK baru setiap tahun — cukup upload file CSV baru ke folder `assets`.
+Aplikasi kalender **multi-tahun** bertema Merah Putih untuk pengguna Indonesia, menampilkan hari libur nasional dengan highlight warna merah beserta keterangannya. Data hari libur dapat diperbarui **tanpa update APK** — cukup edit file CSV di GitHub, perubahan akan otomatis terunduh ke perangkat pengguna.
 
-## Fitur
-
-- **Multi-Tahun Dinamis** — Ganti tampilan tahun kapan saja menggunakan tombol **◀ Tahun ▶** di bawah toolbar. Data hari libur dibaca dari file `holidays_<tahun>.csv` secara otomatis
-- **Scroll Otomatis ke Bulan Ini** — Saat aplikasi dibuka, kalender langsung scroll ke bulan berjalan. Tombol **"Ke Hari Ini"** di toolbar untuk kembali ke bulan ini kapan saja, termasuk saat sedang melihat tahun lain
-- **Tampilan 12 Bulan Sekaligus** — Semua bulan ditampilkan dalam satu halaman scroll vertikal
-- **Toggle Mode Tampilan** — Tombol di toolbar untuk beralih antara:
-  - *Mode Accordion* — buka/tutup satu bulan sekaligus dengan klik nama bulan
-  - *Mode Semua Terbuka* — semua 12 bulan terbuka sekaligus
-- **Hari Libur dari File CSV** — Data hari libur dimuat dari `assets/holidays_<tahun>.csv`, tidak perlu update kode untuk mengubah data libur
-- **Peringatan CSV Tidak Ada** — Jika file CSV untuk tahun tertentu belum tersedia, muncul banner kuning sebagai pengingat
-- **Keterangan Hari Libur** — Daftar tanggal merah beserta nama hari liburnya ditampilkan di bawah setiap bulan
-- **Highlight Hari Ini** — Tanggal hari ini ditandai dengan lingkaran biru tua dan angka putih agar mudah ditemukan
-- **Cek Update Otomatis** — Saat aplikasi dibuka, mengecek versi terbaru dari GitHub. Jika ada versi baru, muncul dialog notifikasi beserta catatan rilis dan tombol download langsung
-- **Cek Update Manual** — Tersedia di menu overflow (⋮) untuk memeriksa update kapan saja
-- **Indikator Warna Tanggal:**
-  - Hari Ini — Lingkaran biru tua dengan angka putih (prioritas tertinggi)
-  - Hari Libur Nasional — Lingkaran merah muda dengan angka merah
-  - Hari Minggu — Merah
-  - Hari Sabtu — Biru
-  - Hari Biasa — Hitam
+> Versi saat ini: **1.1** · Min Android: **13 (API 33)** · Bahasa: **Kotlin**
 
 ---
 
-## Multi-Tahun Dinamis
+## Fitur
+
+### 🗓️ Kalender
+- **Multi-Tahun Dinamis** — Navigasi antar tahun menggunakan tombol **◀ Tahun ▶** di bawah toolbar. Mendukung tahun 2025–2030, dapat diperluas kapan saja
+- **Scroll Otomatis ke Bulan Ini** — Saat aplikasi dibuka, kalender langsung scroll ke bulan berjalan
+- **Tombol "Ke Hari Ini"** — Kembali ke bulan berjalan kapan saja, termasuk saat sedang melihat tahun lain
+- **Toggle Mode Tampilan** — Beralih antara *Mode Accordion* (buka/tutup per bulan) dan *Mode Semua Terbuka* (12 bulan sekaligus)
+- **Highlight Hari Ini** — Tanggal hari ini ditandai lingkaran merah Indonesia dengan angka putih (prioritas tertinggi)
+- **Keterangan Hari Libur** — Nama hari libur ditampilkan sebagai legenda di bawah setiap bulan
+
+### 🎨 Indikator Warna Tanggal
+
+| Kondisi | Tampilan |
+|---------|----------|
+| Hari Ini | 🔴 Lingkaran merah dengan angka putih |
+| Hari Libur Nasional | 🔴 Lingkaran merah muda dengan angka merah |
+| Hari Minggu | Angka merah |
+| Hari Sabtu | Angka biru |
+| Hari Biasa | Angka hitam |
+
+### 📡 Pembaruan Data Hari Libur (Tanpa Update APK)
+- **Unduh Otomatis dari GitHub** — Saat app dibuka, data hari libur terbaru diunduh dari GitHub Raw secara diam-diam di background
+- **Cache Lokal** — Data tersimpan di internal storage perangkat, tetap berfungsi saat offline
+- **Interval Unduh** — Pembaruan dilakukan maksimal sekali per 24 jam agar hemat data
+- **Prioritas Sumber Data:**
+  1. Cache internal (unduhan GitHub terbaru)
+  2. Assets bawaan APK
+  3. Kalender kosong jika keduanya tidak ada
+- **Banner Status Sumber Data:**
+  - ✅ Hijau — data berhasil diunduh dari GitHub (tampil tanggal pembaruan)
+  - 📦 Biru — data bawaan APK, belum pernah diunduh
+  - ⚠ Oranye — tidak ada data untuk tahun tersebut
+- **Perbarui Manual** — Menu ⋮ → *Perbarui Data Hari Libur* untuk force refresh kapan saja
+
+### 🔔 Update Aplikasi
+- **Cek Update Otomatis** — Saat app dibuka, mengecek versi terbaru via GitHub Releases API secara diam-diam
+- **Notifikasi Update** — Jika ada versi baru, muncul dialog berisi catatan rilis dan tombol download langsung
+- **Cek Update Manual** — Menu ⋮ → *Cek Update Aplikasi*
+
+### 🎨 Tema Kalender Nusantara
+- Toolbar **merah Indonesia** `#CC0001` selaras warna bendera RI
+- Year selector bar **merah gelap** `#A80000`
+- Background app **putih hangat** `#FFFAFA`
+- Ikon aplikasi: kalender bertema merah putih dengan **bintang Pancasila** emas dan **angka 17** — simbol Hari Kemerdekaan RI
+
+### ℹ️ Dialog Tentang
+- Link website, email, dan GitHub yang bisa diklik langsung
+- Gambar QRIS donasi
+- Daftar rekening bank yang bisa di-copy
+
+---
+
+## Pembaruan Data Hari Libur Tanpa Update APK
 
 ### Cara Kerja
 
 ```
-Buka aplikasi
-      │
-      ▼
-Baca tahun sistem (misal: 2026)
-      │
-      ▼
-Cari assets/holidays_2026.csv
-      │
-   Ada file?
-   ┌───┴───┐
-  Ya      Tidak
-   │        │
-Muat      Tampilkan kalender
-libur     kosong + banner ⚠
-   │
-Scroll otomatis ke bulan ini
+App dibuka
+    │
+    ▼
+Fase 1 — Tampil seketika (dari data lokal)
+    ├── Cache ada?  → Tampilkan dari cache    Banner: ✅ Hijau
+    ├── Assets ada? → Tampilkan dari APK      Banner: 📦 Biru
+    └── Keduanya kosong → Kalender kosong     Banner: ⚠ Oranye
+    │
+    ▼ (background, tidak menghalangi UI)
+Fase 2 — Unduh diam-diam dari GitHub
+    ├── Sudah < 24 jam?    → Skip
+    ├── Tidak ada internet? → Skip
+    └── Ada internet?
+            ↓
+        Unduh holidays_<tahun>.csv dari GitHub Raw
+            ↓
+        Konten valid? → Simpan ke cache
+                     → Rebuild kalender otomatis
+                     → Banner berubah ke ✅ Hijau
 ```
 
-Saat user menekan tombol **◀** atau **▶**:
-```
-User tekan ◀ (atau ▶)
-      │
-      ▼
-activeYear-- (atau ++)
-      │
-      ▼
-Cari assets/holidays_<tahun>.csv
-      │
-Rebuild 12 bulan → refresh adapter
-      │
-Scroll ke Januari tahun baru
-```
+### Cara Memperbarui Data (Tanpa Build APK)
 
-### Cara Menambah Tahun Baru
+Cukup edit langsung di GitHub — tidak perlu buka Android Studio:
 
-Cukup **tiga langkah** — tanpa update kode, tanpa rilis APK baru:
+1. Buka `github.com/ryanbekabe/Kalender-2026`
+2. Navigasi ke `app/src/main/assets/`
+3. Edit atau buat file `holidays_<tahun>.csv`
+4. Commit perubahan
 
-**Langkah 1 — Buat file CSV baru:**
-```
-assets/holidays_2029.csv
-```
+Pengguna mendapat data terbaru **otomatis saat membuka app** keesokan harinya, atau **seketika** via menu ⋮ → *Perbarui Data Hari Libur*.
 
-**Langkah 2 — Isi dengan format standar:**
-```csv
-tanggal,keterangan
-2029-01-01,Tahun Baru 2029
-2029-01-24,Tahun Baru Imlek 2580
-...
-```
-
-**Langkah 3 — Commit & push ke GitHub.**
-
-File CSV akan ikut terbundle saat build APK berikutnya. Pengguna mendapat tahun baru setelah update APK.
-
-> **Catatan:** Rentang tahun yang didukung saat ini: **2025 – 2030**.
-> Untuk memperluas rentang, ubah konstanta `yearMin` dan `yearMax` di `MainActivity.kt`.
-
-### File CSV yang Tersedia
+### Status File CSV
 
 | File | Status |
 |------|--------|
-| `holidays_2025.csv` | ⬜ Belum ada — perlu dibuat |
+| `holidays_2025.csv` | ⬜ Belum ada |
 | `holidays_2026.csv` | ✅ Tersedia |
 | `holidays_2027.csv` | ✅ Tersedia |
 | `holidays_2028.csv` | ✅ Tersedia |
-| `holidays_2029.csv` | ⬜ Belum ada — perlu dibuat |
-| `holidays_2030.csv` | ⬜ Belum ada — perlu dibuat |
+| `holidays_2029.csv` | ⬜ Belum ada |
+| `holidays_2030.csv` | ⬜ Belum ada |
 
 ### Format File CSV
 
@@ -105,12 +113,11 @@ tanggal,keterangan
 YYYY-MM-DD,Nama Hari Libur
 ```
 
-Aturan format:
-- Baris pertama adalah header — wajib ada, tidak boleh dihapus
-- Kolom `tanggal` harus format `YYYY-MM-DD`
-- Kolom `keterangan` boleh mengandung spasi dan karakter khusus
-- Baris kosong dan baris diawali `#` diabaikan (bisa dipakai sebagai komentar)
-- Tidak perlu urut tanggal, tapi disarankan urut untuk kemudahan baca
+Aturan:
+- Baris pertama adalah header — wajib ada
+- Format tanggal harus `YYYY-MM-DD`
+- Baris kosong dan baris diawali `#` diabaikan (gunakan sebagai komentar)
+- Urutan baris tidak harus berurutan
 
 ---
 
@@ -183,120 +190,116 @@ Aturan format:
 
 ---
 
-## Sistem Auto-Update
-
-Aplikasi mengecek versi terbaru secara otomatis melalui **GitHub Releases API** setiap kali dibuka. Tidak perlu server — cukup manfaatkan fitur GitHub Releases yang gratis.
-
-### Cara Kerja
-
-```
-APK (versionName saat ini)
-        │
-        ▼
-GitHub API: api.github.com/repos/ryanbekabe/Kalender-2026/releases/latest
-        │
-        ▼
-Bandingkan tag_name GitHub  vs  versionName APK
-        │
-   Ada versi baru?
-   ┌────┴────┐
-  Ya        Tidak
-   │          │
-Dialog     Diam saja
-Update    (silent mode)
-   │
-Tombol "Download"
-→ Buka browser ke halaman release / file APK
-```
-
-### Dua Mode Pengecekan
-
-| Mode | Kapan | Perilaku jika sudah terbaru |
-|------|-------|-----------------------------|
-| **Otomatis** | Setiap buka aplikasi | Diam, tidak mengganggu |
-| **Manual** | Menu ⋮ → "Cek Update" | Tampilkan dialog "Sudah Terbaru" |
+## Sistem Update Aplikasi
 
 ### Cara Merilis Versi Baru
 
 **1. Naikkan versi di `app/build.gradle.kts`:**
 ```kotlin
-versionCode = 2       // tambah 1 setiap rilis
-versionName = "1.1"   // format: MAJOR.MINOR
+versionCode = 3       // selalu tambah 1
+versionName = "1.2"   // format: MAJOR.MINOR
 ```
 
-**2. Build APK:**
+**2. Build APK Release:**
 ```bash
 ./gradlew assembleRelease
 ```
 
 **3. Buat GitHub Release:**
-- Buka repo GitHub → **Releases** → **Draft a new release**
-- **Tag:** `v1.1` ← harus diawali huruf `v`, angka harus sama dengan `versionName`
-- **Title:** nama rilis (contoh: "Versi 1.1 - Tambah CSV 2027")
-- **Deskripsi:** catatan perubahan (akan muncul di dialog update pada APK lama)
-- **Attach file:** upload file APK hasil build
+- Repo GitHub → **Releases** → **Draft a new release**
+- **Tag:** `v1.2` (awali `v`, cocokkan dengan `versionName`)
+- **Deskripsi:** catatan perubahan (muncul di dialog update pengguna)
+- **Attach:** upload file APK
 - Klik **Publish release**
 
-Seluruh pengguna yang membuka APK versi lama akan otomatis mendapat notifikasi update.
+Pengguna dengan APK lama mendapat notifikasi otomatis saat membuka app.
 
 ---
 
 ## Teknologi
 
-- **Bahasa:** Kotlin
-- **Min SDK:** 33 (Android 13)
-- **Target SDK:** 36
-- **UI:** RecyclerView dengan GridLayoutManager (7 kolom)
-- **Library:** AndroidX, Material Design 3
-- **Update:** GitHub Releases API (tanpa library tambahan)
+| | |
+|---|---|
+| **Bahasa** | Kotlin |
+| **Min SDK** | 33 (Android 13) |
+| **Target SDK** | 36 |
+| **UI** | RecyclerView + GridLayoutManager (7 kolom) |
+| **Library** | AndroidX, Material Design 3 |
+| **Update APK** | GitHub Releases API |
+| **Update Data** | GitHub Raw (HttpURLConnection, tanpa library) |
+| **Cache** | Internal Storage (`context.filesDir`) |
+| **Preferensi** | SharedPreferences |
+
+---
 
 ## Struktur Proyek
 
 ```
 app/src/main/
 ├── assets/
-│   ├── holidays_2026.csv       # Data hari libur 2026
-│   ├── holidays_2027.csv       # Data hari libur 2027
-│   ├── holidays_2028.csv       # Data hari libur 2028
-│   └── holidays_<tahun>.csv    # Tambah file baru untuk tahun berikutnya
+│   ├── holidays_2026.csv        # Data hari libur 2026 (bawaan APK)
+│   ├── holidays_2027.csv        # Data hari libur 2027 (bawaan APK)
+│   ├── holidays_2028.csv        # Data hari libur 2028 (bawaan APK)
+│   ├── holidays_<tahun>.csv     # Tambah untuk tahun berikutnya
+│   └── QRISHanyaJasaCom.jpg     # Gambar QRIS donasi
 ├── java/com/hanyajasa/kalender2026/
-│   ├── MainActivity.kt         # Aktivitas utama: multi-tahun, scroll otomatis, year selector
-│   ├── MonthAdapter.kt         # Adapter bulan: accordion, expand-all, legend, replaceData
-│   ├── DayAdapter.kt           # Adapter grid tanggal: pewarnaan hari & highlight hari ini
-│   └── UpdateChecker.kt        # Cek update otomatis via GitHub Releases API
+│   ├── MainActivity.kt          # Aktivitas utama: year selector, scroll, banner status
+│   ├── MonthAdapter.kt          # Adapter bulan: accordion, expand-all, legend
+│   ├── DayAdapter.kt            # Adapter tanggal: warna, highlight hari ini
+│   ├── HolidayUpdater.kt        # Unduh & cache CSV hari libur dari GitHub
+│   ├── UpdateChecker.kt         # Cek update versi APK via GitHub Releases API
+│   └── AboutDialog.kt           # Dialog Tentang: kontak, QRIS, rekening bank
 └── res/
     ├── layout/
-    │   ├── activity_main.xml   # Layout utama: Toolbar + Year Selector Bar + RecyclerView
-    │   ├── item_month.xml      # Item bulan: header + grid + legend
-    │   └── item_day.xml        # Item sel tanggal
+    │   ├── activity_main.xml    # Toolbar + Year Selector + Banner + RecyclerView
+    │   ├── dialog_about.xml     # Layout dialog Tentang (custom ScrollView)
+    │   ├── item_month.xml       # Item bulan: header + grid + legenda libur
+    │   └── item_day.xml         # Item sel tanggal
     ├── menu/
-    │   └── menu_main.xml       # Menu toolbar: Toggle, Ke Hari Ini, Cek Update, Tentang
-    └── drawable/
-        ├── bg_holiday.xml      # Lingkaran merah muda untuk hari libur
-        └── bg_today.xml        # Lingkaran biru tua untuk hari ini
+    │   └── menu_main.xml        # Toggle, Ke Hari Ini, Perbarui Data, Cek Update, Tentang
+    ├── drawable/
+    │   ├── ic_launcher_background.xml  # Background ikon: bendera merah putih
+    │   ├── ic_launcher_foreground.xml  # Foreground ikon: kalender bertema Nusantara
+    │   ├── bg_holiday.xml              # Lingkaran merah muda (hari libur)
+    │   └── bg_today.xml                # Lingkaran merah Indonesia (hari ini)
+    └── values/
+        ├── strings.xml          # Nama app: Kalender Nusantara
+        └── colors.xml           # Palet warna Merah Putih Indonesia
 ```
+
+---
 
 ## Instalasi
 
 1. Unduh APK dari halaman [Releases](https://github.com/ryanbekabe/Kalender-2026/releases/latest)
 2. Instal pada perangkat Android 13 ke atas
-3. Buka aplikasi
+3. Buka aplikasi — kalender langsung scroll ke bulan berjalan
 
 ## Build APK
 
 ```bash
+# Debug
 ./gradlew assembleDebug
+# Output: app/build/outputs/apk/debug/app-debug.apk
+
+# Release
+./gradlew assembleRelease
+# Output: app/build/outputs/apk/release/app-release.apk
 ```
 
-APK akan dihasilkan di: `app/build/outputs/apk/debug/app-debug.apk`
+---
 
 ## Lisensi
 
 Proyek ini dilisensikan di bawah [MIT License](LICENSE).
 
-### Donasi Pengembangan
+---
 
-Jika ingin mendukung pengembangan aplikasi ini, atau merasa aplikasi ini bermanfaat, Anda dapat melakukan donasi melalui transfer QRIS dengan scan gambar berikut:
+## Dukungan
+
+Jika aplikasi ini bermanfaat, Anda bisa mendukung pengembangan melalui:
+
+### QRIS
 
 ![QRIS Donasi](QRISHanyaJasaCom.jpg)
 
@@ -313,5 +316,11 @@ Jika ingin mendukung pengembangan aplikasi ini, atau merasa aplikasi ini bermanf
 | Jenius | 90110062490 |
 | Jago | 101396991206 |
 | Seabank | 901899706783 |
+
+### Kontak
+
+- 🌐 [hanyajasa.com](https://hanyajasa.com)
+- ✉ hanyajasa@gmail.com
+- 💻 [@ryanbekabe](https://github.com/ryanbekabe)
 
 Terima kasih atas dukungan Anda!

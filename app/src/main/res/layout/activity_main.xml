@@ -5,37 +5,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FAFAFA">
+    android:background="@color/background_app">
 
+    <!-- ══════════════════════════════════════════
+         Toolbar — Merah Indonesia
+         ══════════════════════════════════════════ -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#1A237E"
-        android:elevation="4dp"
-        app:titleTextColor="#FFFFFF" />
+        android:background="@color/merah_indonesia"
+        android:elevation="6dp"
+        app:titleTextColor="@color/putih" />
 
-    <!-- ══════════════════════════════════════
-         Year Selector Bar
-         Tombol ◀ Tahun ▶ untuk ganti tahun
-         ══════════════════════════════════════ -->
+    <!-- ══════════════════════════════════════════
+         Year Selector Bar — Merah Gelap ◀ Tahun ▶
+         ══════════════════════════════════════════ -->
     <LinearLayout
         android:id="@+id/year_selector_bar"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="52dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="#283593"
-        android:elevation="2dp">
+        android:background="@color/merah_gelap"
+        android:elevation="4dp">
 
         <!-- Tombol tahun sebelumnya -->
         <ImageButton
             android:id="@+id/btn_prev_year"
-            android:layout_width="48dp"
+            android:layout_width="52dp"
             android:layout_height="match_parent"
             android:src="@android:drawable/ic_media_previous"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:tint="#FFFFFF"
+            android:tint="@color/putih"
             android:contentDescription="Tahun Sebelumnya" />
 
         <!-- Label tahun aktif -->
@@ -45,37 +47,42 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF" />
+            android:textColor="@color/putih"
+            android:letterSpacing="0.05" />
 
         <!-- Tombol tahun berikutnya -->
         <ImageButton
             android:id="@+id/btn_next_year"
-            android:layout_width="48dp"
+            android:layout_width="52dp"
             android:layout_height="match_parent"
             android:src="@android:drawable/ic_media_next"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:tint="#FFFFFF"
+            android:tint="@color/putih"
             android:contentDescription="Tahun Berikutnya" />
 
     </LinearLayout>
 
-    <!-- Indikator CSV tidak ditemukan -->
+    <!-- ══════════════════════════════════════════
+         Banner status sumber data
+         ══════════════════════════════════════════ -->
     <TextView
         android:id="@+id/tv_csv_warning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:textSize="12sp"
-        android:textColor="#FFFFFF"
-        android:background="#F57F17"
+        android:textSize="11sp"
+        android:textColor="@color/putih"
         android:gravity="center"
         android:visibility="gone" />
 
+    <!-- ══════════════════════════════════════════
+         Daftar bulan
+         ══════════════════════════════════════════ -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/months_list"
         android:layout_width="match_parent"

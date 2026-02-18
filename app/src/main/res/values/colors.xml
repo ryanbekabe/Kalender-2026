@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- ── Merah Putih Indonesia ──────────────────────────────── -->
+    <color name="merah_indonesia">#CC0001</color>   <!-- Merah bendera RI -->
+    <color name="merah_gelap">#A80000</color>        <!-- Merah gelap untuk shadow -->
+    <color name="merah_muda">#FFEBEE</color>         <!-- Merah muda untuk background libur -->
+    <color name="putih">#FFFFFF</color>              <!-- Putih bersih -->
+    <color name="putih_transparan">#E8FFFFFF</color> <!-- Putih semi transparan -->
+
+    <!-- ── Warna teks tanggal ────────────────────────────────── -->
+    <color name="teks_libur">#CC0001</color>         <!-- Merah sama dengan bendera -->
+    <color name="teks_sabtu">#1565C0</color>         <!-- Biru untuk Sabtu -->
+    <color name="teks_biasa">#212121</color>         <!-- Hitam pekat untuk hari biasa -->
+
+    <!-- ── Hari ini — lingkaran merah bendera ───────────────── -->
+    <color name="bg_hari_ini">#CC0001</color>        <!-- Lingkaran merah untuk hari ini -->
+
+    <!-- ── UI umum ───────────────────────────────────────────── -->
+    <color name="background_app">#FFFAFA</color>     <!-- Putih hangat -->
+    <color name="divider">#FFCCCC</color>            <!-- Garis pemisah merah muda -->
 </resources>

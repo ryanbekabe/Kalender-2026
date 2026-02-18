@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Background lingkaran untuk hari libur nasional.
+    Warna: Merah muda hangat — turunan dari merah Indonesia.
+-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
-    <solid android:color="#FFEBEE" />
+    <solid android:color="#FFCDD2" />
 </shape>

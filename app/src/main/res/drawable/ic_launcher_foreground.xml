@@ -1,33 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Ikon Kalender Nusantara
+    Desain: Kalender dengan tema merah putih Indonesia
+    - Header kalender: Merah Indonesia dengan ornamen garis emas
+    - Body kalender: Putih bersih
+    - Tanggal merah menyala di tengah (simbol tanggal merah/libur)
+    - Gantungan kalender: Merah gelap
+    - Hiasan bintang di header: Simbol bintang Pancasila
+-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Calendar body -->
+
+    <!-- ── Bayangan kalender ────────────────────────────────── -->
+    <path
+        android:fillColor="#33000000"
+        android:pathData="M28,43h54c2.2,0 4,1.8 4,4v38c0,2.2 -1.8,4 -4,4H28c-2.2,0 -4,-1.8 -4,-4V47c0,-2.2 1.8,-4 4,-4z" />
+
+    <!-- ── Body kalender: Putih ──────────────────────────────── -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M30,40h48c2.2,0 4,1.8 4,4v32c0,2.2 -1.8,4 -4,4H30c-2.2,0 -4,-1.8 -4,-4V44c0,-2.2 1.8,-4 4,-4z"/>
-    <!-- Calendar header -->
+        android:pathData="M26,41h56c2.2,0 4,1.8 4,4v37c0,2.2 -1.8,4 -4,4H26c-2.2,0 -4,-1.8 -4,-4V45c0,-2.2 1.8,-4 4,-4z" />
+
+    <!-- ── Header kalender: Merah Indonesia ─────────────────── -->
     <path
-        android:fillColor="#1A237E"
-        android:pathData="M26,44c0,-2.2 1.8,-4 4,-4h48c2.2,0 4,1.8 4,4v12H26V44z"/>
-    <!-- Calendar clips -->
+        android:fillColor="#CC0001"
+        android:pathData="M22,45c0,-2.2 1.8,-4 4,-4h56c2.2,0 4,1.8 4,4v16H22V45z" />
+
+    <!-- ── Ornamen garis emas di header ─────────────────────── -->
     <path
-        android:fillColor="#1A237E"
-        android:pathData="M38,32v8M70,32v8"/>
+        android:fillColor="#FFD700"
+        android:pathData="M22,59h64v1.5H22z" />
     <path
-        android:fillColor="#C5CAE9"
-        android:pathData="M36,34v4h4v-4zM68,34v4h4v-4z"/>
-    <!-- Grid lines (calendar days) -->
+        android:fillColor="#FFD700"
+        android:pathData="M22,56.5h64v0.8H22z" />
+
+    <!-- ── Bintang Pancasila di header (tengah) ──────────────── -->
+    <!-- Bintang 5 sudut kecil di tengah header -->
     <path
-        android:fillColor="#E8EAF6"
-        android:pathData="M30,64h10v8h-10zM42,64h10v8h-10zM54,64h10v8h-10zM66,64h10v8h-10zM30,74h10v8h-10zM42,74h10v8h-10z"/>
-    <!-- Number 20 -->
+        android:fillColor="#FFD700"
+        android:pathData="M54,44
+            L55.2,47.7 L59.1,47.7 L56.0,49.9 L57.2,53.6
+            L54,51.4 L50.8,53.6 L52.0,49.9 L48.9,47.7
+            L52.8,47.7 Z" />
+
+    <!-- ── Gantungan kalender kiri ───────────────────────────── -->
     <path
-        android:fillColor="#1A237E"
-        android:pathData="M32,66h8v2h-3v4h2v2h-2v2h3v2h-8v-2h3v-2h-2v-2h2v-2h-3z"/>
-    <!-- Number 26 -->
+        android:fillColor="#CC0001"
+        android:pathData="M36,33 C36,31.3 37.3,30 39,30 C40.7,30 42,31.3 42,33 L42,44 L36,44 Z" />
     <path
-        android:fillColor="#D32F2F"
-        android:pathData="M56,66h8c1.1,0 2,0.9 2,2s-0.9,2 -2,2h-3v2h-2v-2h-1c-1.1,0 -2,-0.9 -2,-2s0.9,-2 2,-2h3v-2h-3v-2zM60,70h2v2h-2z"/>
+        android:fillColor="#A80000"
+        android:pathData="M37,33 C37,31.9 37.9,31 39,31 C40.1,31 41,31.9 41,33 L41,41 L37,41 Z" />
+
+    <!-- ── Gantungan kalender kanan ──────────────────────────── -->
+    <path
+        android:fillColor="#CC0001"
+        android:pathData="M66,33 C66,31.3 67.3,30 69,30 C70.7,30 72,31.3 72,33 L72,44 L66,44 Z" />
+    <path
+        android:fillColor="#A80000"
+        android:pathData="M67,33 C67,31.9 67.9,31 69,31 C70.1,31 71,31.9 71,33 L71,41 L67,41 Z" />
+
+    <!-- ── Grid hari di body kalender ───────────────────────── -->
+    <!-- Baris 1: 7 kolom hari -->
+    <path
+        android:fillColor="#FFEBEE"
+        android:pathData="M26,63h8v7H26z M36,63h8v7H36z M56,63h8v7H56z M66,63h8v7H66z M76,63h8v7H76z" />
+    <path
+        android:fillColor="#E3F2FD"
+        android:pathData="M46,63h8v7H46z" />
+
+    <!-- Baris 2 -->
+    <path
+        android:fillColor="#FFEBEE"
+        android:pathData="M26,72h8v7H26z M46,72h8v7H46z M56,72h8v7H56z M66,72h8v7H66z M76,72h8v7H76z" />
+    <path
+        android:fillColor="#E3F2FD"
+        android:pathData="M36,72h8v7H36z" />
+
+    <!-- ── Tanggal merah besar di tengah ─────────────────────── -->
+    <!-- Lingkaran merah highlight hari libur -->
+    <path
+        android:fillColor="#CC0001"
+        android:pathData="M54,63 m-7,3.5 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0" />
+
+    <!-- Angka "17" putih di lingkaran merah (simbol 17 Agustus) -->
+    <!-- Angka 1 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M49.5,63.5 L49.5,63.5 L50.5,62.5 L50.5,70 L49.5,70 Z" />
+    <!-- Angka 7 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M52,62.5 L56,62.5 L56,63.5 L53.5,70 L52.5,70 L55,63.5 L52,63.5 Z" />
+
+    <!-- ── Garis-garis grid kalender (horizontal) ────────────── -->
+    <path
+        android:fillColor="#FFCCCC"
+        android:pathData="M22,62h64v0.5H22z M22,71h64v0.5H22z" />
+
+    <!-- ── Garis vertikal grid ───────────────────────────────── -->
+    <path
+        android:fillColor="#FFCCCC"
+        android:pathData="M35,62v17h0.5V62z M45,62v17h0.5V62z M55,62v17h0.5V62z M65,62v17h0.5V62z M75,62v17h0.5V62z" />
+
 </vector>

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Background lingkaran penuh berwarna biru tua untuk highlight "Hari Ini" -->
+<!--
+    Background lingkaran untuk tanggal hari ini.
+    Warna: Merah Indonesia #CC0001 — selaras dengan tema Kalender Nusantara.
+    Prioritas tertinggi: menimpa warna libur, Minggu, dan Sabtu.
+-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
-    <solid android:color="#1A237E" />
+    <solid android:color="#CC0001" />
 </shape>
