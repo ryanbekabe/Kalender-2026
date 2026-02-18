@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout custom untuk dialog "Tentang Aplikasi".
+    Menggunakan ScrollView agar semua konten bisa di-scroll
+    termasuk gambar QRIS dan daftar rekening bank.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- ── Nama & Versi ───────────────────────────────────── -->
+        <TextView
+            android:id="@+id/tv_app_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#1A237E" />
+
+        <TextView
+            android:id="@+id/tv_app_version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="13sp"
+            android:textColor="#757575"
+            android:layout_marginTop="2dp" />
+
+        <!-- Garis pemisah -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- ── Deskripsi ──────────────────────────────────────── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Aplikasi kalender multi-tahun untuk Indonesia dengan data hari libur nasional yang dapat diperbarui tanpa update APK."
+            android:textSize="13sp"
+            android:textColor="#424242" />
+
+        <!-- ── Kontak ──────────────────────────────────────────── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Kontak"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#1A237E"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="6dp" />
+
+        <!-- Website — bisa diklik -->
+        <TextView
+            android:id="@+id/tv_website"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🌐  https://hanyajasa.com"
+            android:textSize="13sp"
+            android:textColor="#1565C0"
+            android:textIsSelectable="true"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp" />
+
+        <!-- Email — bisa diklik -->
+        <TextView
+            android:id="@+id/tv_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="✉  hanyajasa@gmail.com"
+            android:textSize="13sp"
+            android:textColor="#1565C0"
+            android:textIsSelectable="true"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp" />
+
+        <!-- GitHub -->
+        <TextView
+            android:id="@+id/tv_github"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="💻  github.com/ryanbekabe/Kalender-2026"
+            android:textSize="13sp"
+            android:textColor="#1565C0"
+            android:textIsSelectable="true"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp" />
+
+        <!-- ── Donasi ──────────────────────────────────────────── -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="14dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dukung Pengembangan"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#1A237E"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Jika aplikasi ini bermanfaat, Anda bisa berdonasi melalui QRIS berikut:"
+            android:textSize="12sp"
+            android:textColor="#616161"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Gambar QRIS -->
+        <ImageView
+            android:id="@+id/img_qris"
+            android:layout_width="200dp"
+            android:layout_height="280dp"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitCenter"
+            android:contentDescription="QRIS Donasi HanyaJasa"
+            android:layout_marginBottom="12dp" />
+
+        <!-- ── Rekening Bank ──────────────────────────────────── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="atau transfer ke rekening:"
+            android:textSize="12sp"
+            android:textColor="#616161"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Tabel rekening — diisi programatik di AboutDialog.kt -->
+        <LinearLayout
+            android:id="@+id/ll_bank_accounts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <!-- ── Credit ─────────────────────────────────────────── -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dibuat oleh @ryanbekabe"
+            android:textSize="12sp"
+            android:textColor="#9E9E9E"
+            android:gravity="center" />
+
+    </LinearLayout>
+</ScrollView>

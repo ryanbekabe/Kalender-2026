@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.BufferedReader
-import java.io.InputStreamReader
+import java.io.StringReader
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -37,19 +37,17 @@ class MainActivity : AppCompatActivity() {
     private var todayDay   = -1
 
     // ── Tahun yang sedang ditampilkan ────────────────────────────
-    // Default: tahun sistem. Jika tidak ada CSV-nya, tetap tampil
-    // kalender kosong (tanpa warna libur).
     private var activeYear = -1
 
-    // ── Rentang tahun yang didukung (bisa diperluas) ─────────────
+    // ── Rentang tahun yang didukung ──────────────────────────────
     private val yearMin = 2025
     private val yearMax = 2030
 
     // ── View references ──────────────────────────────────────────
-    private lateinit var tvYear      : TextView
-    private lateinit var tvCsvWarning: TextView
-    private lateinit var btnPrevYear : ImageButton
-    private lateinit var btnNextYear : ImageButton
+    private lateinit var tvYear       : TextView
+    private lateinit var tvCsvWarning : TextView
+    private lateinit var btnPrevYear  : ImageButton
+    private lateinit var btnNextYear  : ImageButton
 
     // ─────────────────────────────────────────────────────────────
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,18 +61,19 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        // Ambil tanggal hari ini
         val today  = Calendar.getInstance()
         todayYear  = today.get(Calendar.YEAR)
         todayMonth = today.get(Calendar.MONTH)
         todayDay   = today.get(Calendar.DAY_OF_MONTH)
 
-        // Tahun aktif = tahun hari ini, dibatasi rentang yearMin..yearMax
         activeYear = todayYear.coerceIn(yearMin, yearMax)
 
         setupToolbar()
         setupYearSelector()
         setupRecyclerView()
+
+        // Tampilkan kalender dari data lokal (assets/cache) dulu,
+        // lalu unduh update di background secara diam-diam
         loadYearData(activeYear, scrollToCurrentMonth = true)
 
         UpdateChecker.check(
@@ -90,12 +89,11 @@ class MainActivity : AppCompatActivity() {
     private fun setupToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        // Judul dikelola dinamis di updateYearSelectorUI()
         supportActionBar?.title = "Kalender Indonesia"
     }
 
     // ─────────────────────────────────────────────────────────────
-    // Year selector bar — tombol ◀ Tahun ▶
+    // Year selector bar ◀ Tahun ▶
     // ─────────────────────────────────────────────────────────────
     private fun setupYearSelector() {
         tvYear       = findViewById(R.id.tv_year)
@@ -120,9 +118,8 @@ class MainActivity : AppCompatActivity() {
         updateYearSelectorUI()
     }
 
-    // Perbarui label tahun dan status tombol panah
     private fun updateYearSelectorUI() {
-        tvYear.text          = activeYear.toString()
+        tvYear.text           = activeYear.toString()
         btnPrevYear.isEnabled = activeYear > yearMin
         btnPrevYear.alpha     = if (activeYear > yearMin) 1f else 0.3f
         btnNextYear.isEnabled = activeYear < yearMax
@@ -130,101 +127,125 @@ class MainActivity : AppCompatActivity() {
     }
 
     // ─────────────────────────────────────────────────────────────
-    // Load penuh untuk satu tahun:
-    //  1. Baca CSV holidays_<year>.csv
-    //  2. Rebuild monthsData
-    //  3. Refresh adapter
-    //  4. Scroll ke bulan ini (jika diminta & tahun = todayYear)
+    // Load penuh untuk satu tahun — inti dari semua perubahan data
+    //
+    // Alur:
+    //  1. Baca CSV dari cache/assets via HolidayUpdater.readCsv()
+    //  2. Rebuild 12 bulan & refresh adapter
+    //  3. Tampilkan banner status sumber data
+    //  4. Jalankan unduhan CSV terbaru di background (silent)
+    //     → Jika ada CSV baru: rebuild ulang kalender otomatis
     // ─────────────────────────────────────────────────────────────
     private fun loadYearData(year: Int, scrollToCurrentMonth: Boolean) {
         updateYearSelectorUI()
 
-        val csvFound = loadHolidaysFromCsv(year)
-
-        // Tampilkan warning banner jika CSV tidak ada
-        if (!csvFound) {
-            tvCsvWarning.visibility = View.VISIBLE
-            tvCsvWarning.text =
-                "⚠ File holidays_$year.csv tidak ditemukan — " +
-                "upload ke folder assets untuk menampilkan hari libur."
+        // ── Langkah 1 & 2: Baca data lokal & tampilkan kalender ──
+        val csvContent = HolidayUpdater.readCsv(this, year)
+        if (csvContent != null) {
+            parseCsvContent(csvContent)
         } else {
-            tvCsvWarning.visibility = View.GONE
+            holidaysMap.clear()
         }
 
-        // Rebuild data bulan
         monthsData.clear()
         setupMonths(year)
-
-        // Refresh adapter dengan data baru
         monthAdapter.replaceData(monthsData)
 
-        // Scroll ke bulan ini hanya jika tahun yang ditampilkan = tahun hari ini
+        // ── Langkah 3: Tampilkan banner status sumber data ────────
+        updateDataSourceBanner(year)
+
+        // ── Langkah 4: Scroll posisi ──────────────────────────────
         if (scrollToCurrentMonth && year == todayYear) {
             scrollToMonth(todayMonth)
         } else if (!scrollToCurrentMonth) {
-            // Saat ganti tahun manual, selalu scroll ke atas (bulan Januari)
             recyclerView.scrollToPosition(0)
         }
+
+        // ── Langkah 5: Unduh CSV terbaru di background ────────────
+        // Callback onRefresh hanya dipanggil jika ada file baru yang
+        // berhasil disimpan — kalender di-rebuild ulang secara otomatis
+        HolidayUpdater.loadAndRefresh(this, year) {
+            // Callback ini sudah dijalankan di main thread
+            Log.d("MainActivity", "CSV $year diperbarui dari GitHub, rebuild kalender")
+            val newContent = HolidayUpdater.readCsv(this, year)
+            if (newContent != null) parseCsvContent(newContent) else holidaysMap.clear()
+
+            monthsData.clear()
+            setupMonths(year)
+            monthAdapter.replaceData(monthsData)
+            updateDataSourceBanner(year)
+
+            // Pertahankan posisi scroll yang sedang aktif
+            if (year == todayYear) scrollToMonth(todayMonth)
+        }
     }
 
     // ─────────────────────────────────────────────────────────────
-    // Baca assets/holidays_<year>.csv
-    // Kembalikan true jika file ditemukan, false jika tidak ada
+    // Banner info sumber data di bawah year selector
+    // Warna & teks berbeda tergantung sumber:
+    //  🟢 Hijau  = data dari GitHub (online, ada tanggal update)
+    //  🔵 Biru   = data bawaan APK (bundled)
+    //  🟠 Oranye = tidak ada data sama sekali
     // ─────────────────────────────────────────────────────────────
-    private fun loadHolidaysFromCsv(year: Int): Boolean {
-        holidaysMap.clear()
-        val fileName = "holidays_$year.csv"
-        return try {
-            val reader = BufferedReader(
-                InputStreamReader(assets.open(fileName), Charsets.UTF_8)
-            )
-            var isFirstLine = true
-            reader.forEachLine { line ->
-                if (isFirstLine) { isFirstLine = false; return@forEachLine }
-                val trimmed = line.trim()
-                if (trimmed.isEmpty() || trimmed.startsWith("#")) return@forEachLine
-
-                val parts = trimmed.split(",", limit = 2)
-                if (parts.size < 2) return@forEachLine
-
-                val dateStr    = parts[0].trim()
-                val keterangan = parts[1].trim()
-                val dateParts  = dateStr.split("-")
-                if (dateParts.size != 3) return@forEachLine
-
-                val month = dateParts[1].toIntOrNull() ?: return@forEachLine
-                val day   = dateParts[2].toIntOrNull() ?: return@forEachLine
-                holidaysMap[Pair(month - 1, day)] = keterangan
+    private fun updateDataSourceBanner(year: Int) {
+        when (val source = HolidayUpdater.getDataSource(this, year)) {
+            is HolidayUpdater.DataSource.Online -> {
+                tvCsvWarning.visibility = View.VISIBLE
+                tvCsvWarning.text       = "✅ Data diperbarui dari GitHub · ${source.date}"
+                tvCsvWarning.setBackgroundColor(
+                    android.graphics.Color.parseColor("#2E7D32")  // hijau gelap
+                )
             }
-            reader.close()
-            Log.d("CSV", "Berhasil memuat ${holidaysMap.size} hari libur dari $fileName")
-            true
-        } catch (e: Exception) {
-            Log.w("CSV", "File $fileName tidak ditemukan atau gagal dibaca: ${e.message}")
-            false
+            is HolidayUpdater.DataSource.Bundled -> {
+                tvCsvWarning.visibility = View.VISIBLE
+                tvCsvWarning.text       = "📦 Data bawaan APK · Akan diperbarui saat online"
+                tvCsvWarning.setBackgroundColor(
+                    android.graphics.Color.parseColor("#1565C0")  // biru gelap
+                )
+            }
+            is HolidayUpdater.DataSource.NotFound -> {
+                tvCsvWarning.visibility = View.VISIBLE
+                tvCsvWarning.text       = "⚠ Tidak ada data hari libur untuk tahun $year"
+                tvCsvWarning.setBackgroundColor(
+                    android.graphics.Color.parseColor("#E65100")  // oranye gelap
+                )
+            }
         }
     }
 
     // ─────────────────────────────────────────────────────────────
-    // Scroll RecyclerView ke bulan tertentu (0-based)
-    // Menggunakan scrollToPositionWithOffset agar header bulan
-    // terlihat di bagian atas layar, bukan hanya di-scroll ke item
+    // Parse isi CSV (String) → isi holidaysMap
+    // Memisahkan logika parse dari sumber data (assets vs cache)
     // ─────────────────────────────────────────────────────────────
-    private fun scrollToMonth(monthIndex: Int) {
-        if (monthIndex < 0 || monthIndex > 11) return
-        recyclerView.post {
-            val layoutManager = recyclerView.layoutManager as? LinearLayoutManager
-            layoutManager?.scrollToPositionWithOffset(monthIndex, 0)
+    private fun parseCsvContent(csvContent: String) {
+        holidaysMap.clear()
+        var isFirstLine = true
+        BufferedReader(StringReader(csvContent)).forEachLine { line ->
+            if (isFirstLine) { isFirstLine = false; return@forEachLine }
+            val trimmed = line.trim()
+            if (trimmed.isEmpty() || trimmed.startsWith("#")) return@forEachLine
+
+            val parts = trimmed.split(",", limit = 2)
+            if (parts.size < 2) return@forEachLine
+
+            val dateStr    = parts[0].trim()
+            val keterangan = parts[1].trim()
+            val dateParts  = dateStr.split("-")
+            if (dateParts.size != 3) return@forEachLine
+
+            val month = dateParts[1].toIntOrNull() ?: return@forEachLine
+            val day   = dateParts[2].toIntOrNull() ?: return@forEachLine
+            holidaysMap[Pair(month - 1, day)] = keterangan
         }
+        Log.d("CSV", "Parsed ${holidaysMap.size} hari libur")
     }
 
     // ─────────────────────────────────────────────────────────────
-    // Bangun data 12 bulan untuk tahun yang diberikan
+    // Bangun data 12 bulan untuk tahun tertentu
     // ─────────────────────────────────────────────────────────────
     private fun setupMonths(year: Int) {
         for (monthIndex in 0..11) {
             val daysList = mutableListOf<DayItem>()
-
             val calendar = Calendar.getInstance()
             calendar.set(year, monthIndex, 1, 0, 0, 0)
             calendar.set(Calendar.MILLISECOND, 0)
@@ -232,57 +253,59 @@ class MainActivity : AppCompatActivity() {
             val daysInMonth    = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
             val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
 
-            // Sel kosong sebelum tanggal 1
             repeat(firstDayOfWeek - 1) {
                 daysList.add(DayItem("", false, false, false, false, ""))
             }
 
-            // Isi tanggal
             for (day in 1..daysInMonth) {
                 calendar.set(year, monthIndex, day, 0, 0, 0)
                 calendar.set(Calendar.MILLISECOND, 0)
                 val dayOfWeek   = calendar.get(Calendar.DAY_OF_WEEK)
                 val isHoliday   = holidaysMap.containsKey(Pair(monthIndex, day))
                 val holidayName = holidaysMap[Pair(monthIndex, day)] ?: ""
-                val isToday     = (year        == todayYear)
-                               && (monthIndex  == todayMonth)
-                               && (day         == todayDay)
+                val isToday     = (year       == todayYear)
+                               && (monthIndex == todayMonth)
+                               && (day        == todayDay)
 
-                daysList.add(
-                    DayItem(
-                        day         = day.toString(),
-                        isHoliday   = isHoliday,
-                        isSunday    = dayOfWeek == Calendar.SUNDAY,
-                        isSaturday  = dayOfWeek == Calendar.SATURDAY,
-                        isToday     = isToday,
-                        holidayName = holidayName
-                    )
-                )
+                daysList.add(DayItem(
+                    day         = day.toString(),
+                    isHoliday   = isHoliday,
+                    isSunday    = dayOfWeek == Calendar.SUNDAY,
+                    isSaturday  = dayOfWeek == Calendar.SATURDAY,
+                    isToday     = isToday,
+                    holidayName = holidayName
+                ))
             }
 
             val holidayEntries = (1..daysInMonth).mapNotNull { day ->
-                holidaysMap[Pair(monthIndex, day)]?.let { name ->
-                    HolidayEntry(day, name)
-                }
+                holidaysMap[Pair(monthIndex, day)]?.let { HolidayEntry(day, it) }
             }
 
-            // Nama bulan: "Januari 2026", "Februari 2026", dst
-            monthsData.add(
-                MonthData(
-                    name           = "${monthNames[monthIndex]} $year",
-                    adapter        = DayAdapter(daysList),
-                    holidayEntries = holidayEntries
-                )
-            )
+            monthsData.add(MonthData(
+                name           = "${monthNames[monthIndex]} $year",
+                adapter        = DayAdapter(daysList),
+                holidayEntries = holidayEntries
+            ))
         }
     }
 
     // ─────────────────────────────────────────────────────────────
-    // RecyclerView — inisialisasi sekali, data diganti via replaceData
+    // Scroll ke bulan tertentu (0-based index)
+    // ─────────────────────────────────────────────────────────────
+    private fun scrollToMonth(monthIndex: Int) {
+        if (monthIndex < 0 || monthIndex > 11) return
+        recyclerView.post {
+            (recyclerView.layoutManager as? LinearLayoutManager)
+                ?.scrollToPositionWithOffset(monthIndex, 0)
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // RecyclerView
     // ─────────────────────────────────────────────────────────────
     private fun setupRecyclerView() {
-        recyclerView  = findViewById(R.id.months_list)
-        monthAdapter  = MonthAdapter(monthsData) { _ -> }
+        recyclerView = findViewById(R.id.months_list)
+        monthAdapter = MonthAdapter(monthsData) { _ -> }
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter       = monthAdapter
     }
@@ -311,14 +334,18 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.action_goto_today -> {
-                // Kembali ke tahun hari ini dan scroll ke bulan ini
                 if (activeYear != todayYear) {
                     activeYear = todayYear.coerceIn(yearMin, yearMax)
                     loadYearData(activeYear, scrollToCurrentMonth = true)
                 } else {
-                    // Sudah di tahun yang benar, cukup scroll
                     scrollToMonth(todayMonth)
                 }
+                true
+            }
+
+            R.id.action_refresh_holidays -> {
+                // Force refresh: hapus cache lalu unduh ulang dari GitHub
+                showForceRefreshDialog()
                 true
             }
 
@@ -340,21 +367,41 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAboutDialog() {
+    // ─────────────────────────────────────────────────────────────
+    // Dialog konfirmasi force refresh data hari libur
+    // ─────────────────────────────────────────────────────────────
+    private fun showForceRefreshDialog() {
         AlertDialog.Builder(this)
-            .setTitle("Tentang Aplikasi")
+            .setTitle("Perbarui Data Hari Libur")
             .setMessage(
-                "Kalender Indonesia\n" +
-                "Versi: ${BuildConfig.VERSION_NAME}\n\n" +
-                "Aplikasi kalender multi-tahun untuk Indonesia.\n\n" +
-                "Data hari libur dimuat dari:\nassets/holidays_<tahun>.csv\n\n" +
-                "Contoh: holidays_2026.csv, holidays_2027.csv\n\n" +
-                "Format CSV:\ntanggal,keterangan\nYYYY-MM-DD,Nama Hari Libur\n\n" +
-                "Dibuat oleh:\n@ryanbekabe\n\n" +
-                "GitHub:\nhttps://github.com/ryanbekabe/Kalender-2026"
+                "Mengunduh ulang data hari libur $activeYear dari GitHub.\n\n" +
+                "Kalender akan diperbarui otomatis setelah unduhan selesai."
             )
-            .setPositiveButton("OK", null)
+            .setPositiveButton("Perbarui") { _, _ ->
+                // Hapus cache agar batas waktu 24 jam diabaikan
+                HolidayUpdater.clearCache(this, activeYear)
+                // Tampilkan banner loading sementara
+                tvCsvWarning.visibility = View.VISIBLE
+                tvCsvWarning.text       = "⏳ Mengunduh data hari libur $activeYear..."
+                tvCsvWarning.setBackgroundColor(
+                    android.graphics.Color.parseColor("#4A148C")  // ungu gelap
+                )
+                // Jalankan unduhan
+                HolidayUpdater.loadAndRefresh(this, activeYear) {
+                    val newContent = HolidayUpdater.readCsv(this, activeYear)
+                    if (newContent != null) parseCsvContent(newContent) else holidaysMap.clear()
+                    monthsData.clear()
+                    setupMonths(activeYear)
+                    monthAdapter.replaceData(monthsData)
+                    updateDataSourceBanner(activeYear)
+                }
+            }
+            .setNegativeButton("Batal", null)
             .show()
+    }
+
+    private fun showAboutDialog() {
+        AboutDialog.show(this, BuildConfig.VERSION_NAME)
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -370,10 +417,7 @@ class MainActivity : AppCompatActivity() {
         val holidayName: String = ""
     )
 
-    data class HolidayEntry(
-        val day: Int,
-        val name: String
-    )
+    data class HolidayEntry(val day: Int, val name: String)
 
     data class MonthData(
         val name: String,

@@ -16,10 +16,17 @@
         android:icon="@android:drawable/ic_menu_today"
         app:showAsAction="always" />
 
-    <!-- Cek update dari GitHub -->
+    <!-- Force refresh data hari libur dari GitHub -->
+    <item
+        android:id="@+id/action_refresh_holidays"
+        android:title="Perbarui Data Hari Libur"
+        android:icon="@android:drawable/ic_menu_rotate"
+        app:showAsAction="never" />
+
+    <!-- Cek update APK dari GitHub -->
     <item
         android:id="@+id/action_check_update"
-        android:title="Cek Update"
+        android:title="Cek Update Aplikasi"
         android:icon="@android:drawable/ic_popup_sync"
         app:showAsAction="never" />
 
