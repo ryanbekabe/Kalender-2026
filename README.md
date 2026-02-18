@@ -294,10 +294,6 @@ APK akan dihasilkan di: `app/build/outputs/apk/debug/app-debug.apk`
 
 Proyek ini dilisensikan di bawah [MIT License](LICENSE).
 
-## Dukungan
-
-Jika Anda ingin mendukung pengembangan proyek opensource ini, Anda bisa berdonasi melalui:
-
 ### Donasi Pengembangan
 
 Jika ingin mendukung pengembangan aplikasi ini, atau merasa aplikasi ini bermanfaat, Anda dapat melakukan donasi melalui transfer QRIS dengan scan gambar berikut:
