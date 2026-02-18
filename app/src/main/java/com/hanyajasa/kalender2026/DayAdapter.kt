@@ -24,39 +24,54 @@ class DayAdapter(
     }
 
     override fun onBindViewHolder(holder: DayViewHolder, position: Int) {
-        val dayItem = days[position]
+        val d = days[position]
 
-        // PERBAIKAN BUG #2: reset background dan visibility SEBELUM return,
-        // agar ViewHolder yang di-recycle dari sel libur tidak mewarisi
-        // background bg_holiday ke sel kosong berikutnya.
-        if (dayItem.day.isEmpty()) {
+        // Sel kosong — reset semua lalu keluar
+        if (d.day.isEmpty()) {
             holder.dayContainer.visibility = View.INVISIBLE
-            holder.dayContainer.background = null   // ← reset background
+            holder.dayContainer.background = null
             return
         }
 
-        // holidayText selalu disembunyikan — keterangan libur ada di holiday_list
         holder.holidayText.visibility  = View.GONE
         holder.dayContainer.visibility = View.VISIBLE
-        holder.dayText.text            = dayItem.day
+        holder.dayText.text            = d.day
 
-        // Warna angka tanggal + background
+        // ── Prioritas tampilan (dari tertinggi ke terendah): ────────
+        //
+        //  1. isToday + isHoliday  → lingkaran biru tua, teks PUTIH
+        //                            (hari ini sekaligus libur nasional)
+        //  2. isToday + isSunday   → lingkaran biru tua, teks PUTIH
+        //                            (hari ini sekaligus Minggu)
+        //  3. isToday (biasa)      → lingkaran biru tua, teks PUTIH
+        //  4. isHoliday            → lingkaran merah muda, teks merah
+        //  5. isSunday             → teks merah, tanpa background
+        //  6. isSaturday           → teks biru, tanpa background
+        //  7. hari biasa           → teks hitam, tanpa background
+        // ────────────────────────────────────────────────────────────
+
         when {
-            dayItem.isHoliday -> {
-                holder.dayText.setTextColor(android.graphics.Color.parseColor("#D32F2F"))
+            d.isToday -> {
+                // Hari ini selalu mendapat lingkaran biru tua + teks putih,
+                // apapun jenis hari lainnya (libur, Minggu, Sabtu, biasa)
+                holder.dayContainer.setBackgroundResource(R.drawable.bg_today)
+                holder.dayText.setTextColor(android.graphics.Color.WHITE)
+            }
+            d.isHoliday -> {
                 holder.dayContainer.setBackgroundResource(R.drawable.bg_holiday)
-            }
-            dayItem.isSunday -> {
                 holder.dayText.setTextColor(android.graphics.Color.parseColor("#D32F2F"))
-                holder.dayContainer.background = null
             }
-            dayItem.isSaturday -> {
-                holder.dayText.setTextColor(android.graphics.Color.parseColor("#1976D2"))
+            d.isSunday -> {
                 holder.dayContainer.background = null
+                holder.dayText.setTextColor(android.graphics.Color.parseColor("#D32F2F"))
+            }
+            d.isSaturday -> {
+                holder.dayContainer.background = null
+                holder.dayText.setTextColor(android.graphics.Color.parseColor("#1976D2"))
             }
             else -> {
-                holder.dayText.setTextColor(android.graphics.Color.parseColor("#212121"))
                 holder.dayContainer.background = null
+                holder.dayText.setTextColor(android.graphics.Color.parseColor("#212121"))
             }
         }
     }

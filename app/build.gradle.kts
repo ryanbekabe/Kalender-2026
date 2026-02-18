@@ -20,6 +20,13 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // ── Aktifkan generate BuildConfig ────────────────────────────
+    // Diperlukan agar BuildConfig.VERSION_NAME tersedia di kode Kotlin.
+    // Sejak AGP 8.0, fitur ini tidak aktif secara default.
+    buildFeatures {
+        buildConfig = true
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false

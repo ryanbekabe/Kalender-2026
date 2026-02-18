@@ -9,11 +9,25 @@
         android:icon="@android:drawable/ic_menu_sort_by_size"
         app:showAsAction="always" />
 
+    <!-- Scroll ke bulan hari ini -->
+    <item
+        android:id="@+id/action_goto_today"
+        android:title="Ke Hari Ini"
+        android:icon="@android:drawable/ic_menu_today"
+        app:showAsAction="always" />
+
+    <!-- Cek update dari GitHub -->
+    <item
+        android:id="@+id/action_check_update"
+        android:title="Cek Update"
+        android:icon="@android:drawable/ic_popup_sync"
+        app:showAsAction="never" />
+
     <!-- Tentang aplikasi -->
     <item
         android:id="@+id/action_about"
         android:icon="@android:drawable/ic_menu_info_details"
         android:title="Tentang"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
 
 </menu>

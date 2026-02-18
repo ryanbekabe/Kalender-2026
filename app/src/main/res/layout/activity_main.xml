@@ -13,8 +13,68 @@
         android:layout_height="?attr/actionBarSize"
         android:background="#1A237E"
         android:elevation="4dp"
-        app:title="Kalender 2026"
         app:titleTextColor="#FFFFFF" />
+
+    <!-- ══════════════════════════════════════
+         Year Selector Bar
+         Tombol ◀ Tahun ▶ untuk ganti tahun
+         ══════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/year_selector_bar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#283593"
+        android:elevation="2dp">
+
+        <!-- Tombol tahun sebelumnya -->
+        <ImageButton
+            android:id="@+id/btn_prev_year"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:src="@android:drawable/ic_media_previous"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="#FFFFFF"
+            android:contentDescription="Tahun Sebelumnya" />
+
+        <!-- Label tahun aktif -->
+        <TextView
+            android:id="@+id/tv_year"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF" />
+
+        <!-- Tombol tahun berikutnya -->
+        <ImageButton
+            android:id="@+id/btn_next_year"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:src="@android:drawable/ic_media_next"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="#FFFFFF"
+            android:contentDescription="Tahun Berikutnya" />
+
+    </LinearLayout>
+
+    <!-- Indikator CSV tidak ditemukan -->
+    <TextView
+        android:id="@+id/tv_csv_warning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textSize="12sp"
+        android:textColor="#FFFFFF"
+        android:background="#F57F17"
+        android:gravity="center"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/months_list"

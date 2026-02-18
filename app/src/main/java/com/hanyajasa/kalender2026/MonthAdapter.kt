@@ -11,9 +11,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class MonthAdapter(
-    private val months: List<MainActivity.MonthData>,
+    months: List<MainActivity.MonthData>,
     private val onMonthClick: (Int) -> Unit
 ) : RecyclerView.Adapter<MonthAdapter.MonthViewHolder>() {
+
+    // Internal mutable list — bisa diganti penuh saat user ganti tahun
+    private val months = months.toMutableList()
 
     // -1 = tidak ada yang expand (mode accordion default)
     private var expandedPosition = -1
@@ -24,6 +27,16 @@ class MonthAdapter(
         private set
 
     // ---------------------------------------------------------------
+    // Ganti seluruh data — dipanggil saat user ganti tahun
+    // ---------------------------------------------------------------
+    fun replaceData(newMonths: List<MainActivity.MonthData>) {
+        months.clear()
+        months.addAll(newMonths)
+        expandedPosition = -1   // reset accordion agar tidak crash
+        notifyDataSetChanged()
+    }
+
+    // ---------------------------------------------------------------
     // Toggle antara mode "Semua Terbuka" dan "Accordion"
     // ---------------------------------------------------------------
     fun toggleExpandAll() {
@@ -31,10 +44,6 @@ class MonthAdapter(
         if (isExpandAll) {
             expandedPosition = -1
         }
-        // PERBAIKAN BUG #1: reset isInitialized di semua ViewHolder
-        // agar grid tidak salah bulan setelah recycle.
-        // Caranya: set tag null di semua item sehingga onBindViewHolder
-        // akan re-attach adapter grid dengan benar.
         notifyDataSetChanged()
     }
 
@@ -45,10 +54,6 @@ class MonthAdapter(
         val calendarContainer: LinearLayout = view.findViewById(R.id.calendar_container)
         val calendarGrid: RecyclerView      = view.findViewById(R.id.calendar_grid)
         val holidayList: LinearLayout       = view.findViewById(R.id.holiday_list)
-
-        // PERBAIKAN BUG #1: simpan index bulan terakhir yang di-bind
-        // ke ViewHolder ini, bukan sekadar flag boolean.
-        // Jika index berubah (karena recycle), adapter grid di-attach ulang.
         var boundMonthIndex: Int = -1
     }
 
@@ -62,11 +67,11 @@ class MonthAdapter(
         val month = months[position]
         holder.monthName.text = month.name
 
-        // ── Tentukan apakah bulan ini ditampilkan ──────────────────
+        // ── Visibilitas konten bulan ───────────────────────────────
         val isVisible = isExpandAll || position == expandedPosition
         holder.calendarContainer.visibility = if (isVisible) View.VISIBLE else View.GONE
 
-        // ── Ikon expand: sembunyikan saat mode expand-all ──────────
+        // ── Ikon expand ────────────────────────────────────────────
         if (isExpandAll) {
             holder.expandIcon.visibility = View.GONE
         } else {
@@ -74,17 +79,14 @@ class MonthAdapter(
             holder.expandIcon.rotation   = if (position == expandedPosition) 180f else 0f
         }
 
-        // ── PERBAIKAN BUG #1: attach grid adapter hanya jika bulan berubah ─
-        // Ini memastikan grid selalu menampilkan data bulan yang tepat
-        // meskipun ViewHolder di-recycle ke posisi berbeda.
+        // ── Attach grid adapter jika posisi bulan berubah ──────────
         if (holder.boundMonthIndex != position) {
             holder.calendarGrid.layoutManager = GridLayoutManager(holder.itemView.context, 7)
             holder.calendarGrid.adapter       = month.adapter
             holder.boundMonthIndex            = position
         }
 
-        // ── Legend keterangan hari merah ───────────────────────────
-        // PERBAIKAN MINOR #2: hanya bangun legend jika bulan terlihat
+        // ── Legend hari libur ──────────────────────────────────────
         if (isVisible) {
             buildHolidayLegend(holder, month.holidayEntries)
         }
@@ -103,7 +105,7 @@ class MonthAdapter(
     }
 
     // ---------------------------------------------------------------
-    // Bangun daftar keterangan hari libur di bawah grid kalender
+    // Bangun legend keterangan hari libur di bawah grid kalender
     // ---------------------------------------------------------------
     private fun buildHolidayLegend(
         holder: MonthViewHolder,
@@ -139,7 +141,6 @@ class MonthAdapter(
                 ).also { it.bottomMargin = (4 * density).toInt() }
             }
 
-            // Angka tanggal — merah tebal, lebar tetap 32 dp
             val tvDay = TextView(ctx).apply {
                 text      = entry.day.toString()
                 textSize  = 13f
@@ -151,7 +152,6 @@ class MonthAdapter(
                 )
             }
 
-            // Nama hari libur — hitam normal
             val tvName = TextView(ctx).apply {
                 text      = entry.name
                 textSize  = 13f
