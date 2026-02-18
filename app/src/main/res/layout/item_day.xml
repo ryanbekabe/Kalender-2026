@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/day_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="2dp">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="2dp"
+    android:minHeight="40dp">
 
+    <!-- Angka tanggal -->
     <TextView
         android:id="@+id/dayText"
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textStyle="normal" />
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp" />
 
-</FrameLayout>
+    <!--
+        holidayText tetap ada di layout agar tidak crash saat inflate,
+        tapi SELALU GONE — keterangan libur sudah dipindah ke holiday_list
+        di bawah kalender (lihat item_month.xml & MonthAdapter).
+    -->
+    <TextView
+        android:id="@+id/holidayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+</LinearLayout>

@@ -7,16 +7,14 @@
     android:orientation="vertical"
     android:background="#FAFAFA">
 
-    <TextView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Kalender 2026"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:gravity="center"
-        android:padding="16dp"
-        android:background="#1A237E" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="#1A237E"
+        android:elevation="4dp"
+        app:title="Kalender 2026"
+        app:titleTextColor="#FFFFFF" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/months_list"
