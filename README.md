@@ -98,7 +98,11 @@ Proyek ini dilisensikan di bawah [MIT License](LICENSE).
 
 Jika Anda ingin mendukung pengembangan proyek opensource ini, Anda bisa berdonasi melalui:
 
-### QRIS
+### Donasi Pengembangan
+
+Jika ingin mendukung pengembangan aplikasi ini, atau merasa aplikasi ini bermanfaat, Anda dapat melakukan donasi melalui transfer QRIS dengan scan gambar berikut:
+
+![QRIS Donasi](QRISHanyaJasaCom.jpg)
 
 Scan QR code pada gambar `QRISHanyaJasaCom.jpg` di folder proyek.
 
